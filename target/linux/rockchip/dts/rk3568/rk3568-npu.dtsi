@@ -31,6 +31,7 @@
 		compatible = "rockchip,rk3568-rknpu", "rockchip,rknpu";
 		reg = <0x0 0xfde40000 0x0 0x10000>;
 		interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-names = "npu_irq";
 		clocks = <&scmi_clk 2>, <&cru CLK_NPU>, <&cru ACLK_NPU>, <&cru HCLK_NPU>;
 		clock-names = "scmi_clk", "clk", "aclk", "hclk";
 		assigned-clocks = <&cru CLK_NPU>;
@@ -172,9 +173,7 @@
 
 	rknpu_mmu: iommu@fde4b000 {
 		compatible = "rockchip,rk3568-iommu", "rockchip,iommu-v2";
-		reg = <0x0 0xfde4b000 0x0 0x100>;
-		interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
-		interrupt-names = "npu_irq";
+		reg = <0x0 0xfde4b000 0x0 0x1000>;
 		clocks = <&cru ACLK_NPU>, <&cru HCLK_NPU>;
 		clock-names = "aclk", "iface";
 		power-domains = <&power RK3568_PD_NPU>;
