@@ -34,9 +34,10 @@ jobs:
 
       - name: Clone and configure
         run: |
+          # cp feeds.conf.mydefault feeds.conf
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-          cp config.default .config
+          # cp config.default .config
 
       - name: Build firmware
         run: |
@@ -50,4 +51,5 @@ jobs:
         with:
           name: iStoreOS-RK3568-EasePi-R1-firmware
           path: bin/targets/rockchip/armv8/
+          #path: bin/targets/rockchip/armv8/istoreos-rockchip-armv8-easepi_r1-squashfs-sysupgrade.img.gz
           retention-days: 30
