@@ -35,16 +35,6 @@ Signed-off-by: Liangbin Lian <jjm2473@gmail.com>
 +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
 +
 +#include "rk356x-u-boot.dtsi"
-+
-+&gpio4 {
-+	u-boot,dm-pre-reloc;
-+	custom_high_pins {
-+		gpio-hog;
-+		gpios = <18 GPIO_ACTIVE_HIGH>, <20 GPIO_ACTIVE_HIGH>;
-+		output-high;
-+		line-name = "startup-high-gpios";
-+	};
-+};
 --- /dev/null
 +++ b/configs/easepi-r1-rk3568_defconfig
 @@ -0,0 +1,84 @@
