@@ -49,7 +49,7 @@
 
 //配置WL_REG_ON引脚
 &sdio_pwrseq {
-	status = "okay";
+	status = "disabled";
 	reset-gpios = <&gpio3 RK_PD5 GPIO_ACTIVE_LOW>;
 	post-power-on-delay-ms = <200>;
 };
@@ -60,7 +60,7 @@
 	pinctrl-0 = <&wifi_host_wake_irq>;
 	WIFI,host_wake_irq = <&gpio3 RK_PD4 GPIO_ACTIVE_HIGH>;
 	wifi_chip_type = "ap6255";
-	status = "okay";
+	status = "disabled";
 };
 
 &wireless_bluetooth {
@@ -75,7 +75,7 @@
 	BT,reset_gpio    = <&gpio4 RK_PC4 GPIO_ACTIVE_HIGH>;
 	BT,wake_gpio     = <&gpio0 RK_PD5 GPIO_ACTIVE_HIGH>;
 	BT,wake_host_irq = <&gpio0 RK_PD4 GPIO_ACTIVE_HIGH>;
-	status = "okay";
+	status = "disabled";
 };
 
 // wifi
@@ -92,7 +92,7 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&sdmmc2m0_bus4 &sdmmc2m0_cmd &sdmmc2m0_clk>;
 	sd-uhs-sdr104;
-	status = "okay";
+	status = "disabled";
 };
 
 &pcie2x1 {
@@ -150,5 +150,14 @@
 		vcc3v3_nvme_en: vcc3v3-nvme-en {
 			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
+	};
+};
+
+&gpio4 {
+	custom_high_pins {
+		gpio-hog;
+		gpios = <18 GPIO_ACTIVE_HIGH>, <20 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "startup-high-gpios";
 	};
 };
