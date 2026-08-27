@@ -68,7 +68,7 @@ jobs:
 
       - name: Validate firmware artifacts
         run: |
-          image="bin/targets/rockchip/armv8/istoreos-rockchip-armv8-easepi_r1-squashfs-sysupgrade.img"
+          image="bin/targets/rockchip/armv8/istoreos-rockchip-armv8-easepi_r1-squashfs-sysupgrade.img.gz"
           test -s "$image"
           sha256sum "$image"
 
