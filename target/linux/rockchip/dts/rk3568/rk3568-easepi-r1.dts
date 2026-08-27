@@ -15,3 +15,14 @@
 		power-key-dbclick;
 	};
 };
+
+&rkvdec {
+	/delete-property/ rockchip,disable-auto-freq;
+	operating-points-v2 = <&rkvdec_opp_table>;
+};
+
+&rkvenc {
+	rockchip,advanced-rates = <400000000>, <0>, <400000000>;
+	rockchip,default-max-load = <2088960>;
+	operating-points-v2 = <&rkvenc_opp_table>;
+};

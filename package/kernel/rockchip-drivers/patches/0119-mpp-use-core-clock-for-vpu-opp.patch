@@ -1,0 +1,47 @@
+From 6e5501dc7f8f8aa157312de80b1e6e68de4d1ed0 Mon Sep 17 00:00:00 2001
+From: wangpf <1312524400@qq.com>
+Date: Thu, 27 Aug 2026 16:00:00 +0800
+Subject: [PATCH] mpp: use core clock for VPU OPP
+
+RK3568 VPU nodes list the ACLK before clk_core. Letting the OPP core
+select the first clock therefore associates frequency and voltage points
+with the bus clock while the MPP devfreq target changes clk_core.
+
+Select clk_core explicitly for the decoder and encoder OPP tables so
+devfreq changes the intended clock and keeps voltage transitions paired
+with core-frequency transitions.
+
+---
+ drivers/video/rockchip/mpp/mpp_rkvdec2.c | 2 +-
+ drivers/video/rockchip/mpp/mpp_rkvenc.c  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/video/rockchip/mpp/mpp_rkvdec2.c b/drivers/video/rockchip/mpp/mpp_rkvdec2.c
+index 85859bb..f73b399 100644
+--- a/drivers/video/rockchip/mpp/mpp_rkvdec2.c
++++ b/drivers/video/rockchip/mpp/mpp_rkvdec2.c
+@@ -1108,7 +1108,7 @@ static int rkvdec2_devfreq_init(struct mpp_dev *mpp)
+ 		return 0;
+ 	}
+ 
+-	ret = rockchip_init_opp_table(mpp->dev, opp_info, NULL, "vdec");
++	ret = rockchip_init_opp_table(mpp->dev, opp_info, "clk_core", "vdec");
+ 	if (ret) {
+ 		dev_err(mpp->dev, "failed to init_opp_table\n");
+ 		return ret;
+diff --git a/drivers/video/rockchip/mpp/mpp_rkvenc.c b/drivers/video/rockchip/mpp/mpp_rkvenc.c
+index 75f9696..8702e30 100644
+--- a/drivers/video/rockchip/mpp/mpp_rkvenc.c
++++ b/drivers/video/rockchip/mpp/mpp_rkvenc.c
+@@ -1023,7 +1023,7 @@ static int rkvenc_devfreq_init(struct mpp_dev *mpp)
+ 	}
+ 
+ 	rockchip_get_opp_data(rockchip_rkvenc_of_match, opp_info);
+-	ret = rockchip_init_opp_table(mpp->dev, opp_info, NULL, "venc");
++	ret = rockchip_init_opp_table(mpp->dev, opp_info, "clk_core", "venc");
+ 	if (ret) {
+ 		dev_err(mpp->dev, "failed to init_opp_table\n");
+ 		return ret;
+-- 
+2.51.0
+
