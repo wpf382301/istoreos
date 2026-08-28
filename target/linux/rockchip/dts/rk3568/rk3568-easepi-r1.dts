@@ -26,3 +26,56 @@
 	rockchip,default-max-load = <2088960>;
 	operating-points-v2 = <&rkvenc_opp_table>;
 };
+
+/* R1-specific RK3568 NPU/IOMMU configuration for the 8 GB board. */
+&vdd_npu {
+	regulator-init-microvolt = <900000>;
+	regulator-always-on;
+	regulator-boot-on;
+};
+
+&bus_npu {
+	bus-supply = <&vdd_logic>;
+	pvtm-supply = <&vdd_cpu>;
+	status = "okay";
+};
+
+&rknpu {
+	reg = <0x0 0xfde40000 0x0 0x10000>;
+	interrupt-names = "npu_irq";
+	rknpu-supply = <&vdd_npu>;
+	/delete-property/ iommus;
+	status = "okay";
+};
+
+&rknpu_mmu {
+	reg = <0x0 0xfde4b000 0x0 0x40>;
+	interrupt-names = "npu_mmu";
+	status = "disabled";
+};
+
+/* These peripherals are not fitted on the R1 variant. */
+&sdio_pwrseq {
+	status = "disabled";
+};
+
+&wireless_wlan {
+	status = "disabled";
+};
+
+&wireless_bluetooth {
+	status = "disabled";
+};
+
+&sdmmc2 {
+	status = "disabled";
+};
+
+&gpio4 {
+	custom_high_pins {
+		gpio-hog;
+		gpios = <18 GPIO_ACTIVE_HIGH>, <20 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "startup-high-gpios";
+	};
+};
