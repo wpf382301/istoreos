@@ -91,6 +91,7 @@ $(call Device/Legacy/rk3568,$(1))
   DEVICE_VENDOR := EasePi
   DEVICE_MODEL := R1
   DEVICE_DTS := rk3568/rk3568-easepi-r1
+  BOOT_SCRIPT := easepi-r1
   DEVICE_PACKAGES += kmod-r8169 kmod-nvme
 endef
 TARGET_DEVICES += easepi_r1

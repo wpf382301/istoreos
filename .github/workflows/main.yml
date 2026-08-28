@@ -29,8 +29,17 @@ jobs:
 
       - name: Update feeds
         run: |
+          # OpenWrt reads feeds.conf (or feeds.conf.default), not the
+          # repository-specific feeds.conf.mydefault file.
+          cp feeds.conf.mydefault feeds.conf
           ./scripts/feeds update -a
           ./scripts/feeds install -a
+          for feed in h69k_oled lcdsimple third_party diskman oaf linkease_nas linkease_nas_luci jjm2473_apps; do
+            test -d "feeds/$feed" || {
+              echo "Expected feed is unavailable: $feed" >&2
+              exit 1
+            }
+          done
 
       - name: Configure and validate firmware
         run: |
@@ -52,6 +61,14 @@ jobs:
             CONFIG_PACKAGE_kmod-rk_vcodec
             CONFIG_PACKAGE_kmod-rockchip-opp-select
             CONFIG_PACKAGE_kmod-rockchip-system-monitor
+            CONFIG_PACKAGE_linkease
+            CONFIG_PACKAGE_luci-app-linkease
+            CONFIG_PACKAGE_luci-app-quickstart
+            CONFIG_PACKAGE_luci-app-diskman
+            CONFIG_PACKAGE_luci-app-oaf
+            CONFIG_PACKAGE_luci-i18n-linkease-zh-cn
+            CONFIG_PACKAGE_luci-i18n-quickstart-zh-cn
+            CONFIG_PACKAGE_quickstart
           )
           for symbol in "${required_symbols[@]}"; do
             grep -qx "${symbol}=y" .config || {
@@ -71,6 +88,25 @@ jobs:
           image="bin/targets/rockchip/armv8/istoreos-rockchip-armv8-easepi_r1-squashfs-sysupgrade.img.gz"
           test -s "$image"
           sha256sum "$image"
+          manifest="$(find bin/targets/rockchip/armv8 -maxdepth 1 -type f -name '*.manifest' -print -quit)"
+          test -s "$manifest"
+          required_packages=(
+            linkease
+            luci-app-linkease
+            luci-app-diskman
+            luci-app-oaf
+            luci-app-quickstart
+            luci-app-store
+            luci-i18n-linkease-zh-cn
+            luci-i18n-quickstart-zh-cn
+            quickstart
+          )
+          for package in "${required_packages[@]}"; do
+            grep -q "^${package} - " "$manifest" || {
+              echo "Required package is absent from the firmware manifest: $package" >&2
+              exit 1
+            }
+          done
 
       - name: Upload firmware artifacts
         if: success()
